@@ -1,16 +1,17 @@
 # personal-hub-skills
 
-Skills, agents, and methodologies for Personal Hub.
+Skills, agents, and methodologies for [Personal Hub](https://github.com/hulinl/personal-hub).
 
 ## What this repo is
 
-This repo contains SkillTemplate YAML definitions and Markdown methodology docs
-that drive the Personal Hub AI assistant. It lives in a separate repo so the
-learning history (skill edits, new agents, methodology updates) is readable
-independently from the main application code.
+- `personal_hub_skills/skills/*.yaml` — SkillTemplate definitions (names,
+  system prompts, tool allowlists, autonomy modes)
+- `methodologies/` — Markdown knowledge documents that agents read as context
+- `style_patterns/` — example-based style guides per audience (client, colleague,
+  friend)
+- `prompts/` — shared system-prompt fragments
 
-Personal Hub loads this package at runtime. Tenants can point at a fork to use
-fully custom skills without touching the application.
+Personal Hub loads this repo via `apps/api/skills/loader_v2.py`.
 
 ## Install
 
@@ -18,37 +19,53 @@ fully custom skills without touching the application.
 pip install personal-hub-skills
 ```
 
-## Usage
+In Personal Hub, set `SKILLS_SOURCE=package` env to load from this package.
 
-Personal Hub loads this package automatically when `SKILLS_SOURCE=package` is
-set. Point `tenant.skills_repo_url` at a fork to use custom skills.
+## Use with Personal Hub
 
-```python
-from personal_hub_skills import skills_path
-yaml_files = list(skills_path().glob("*.yaml"))
+Point your tenant at this repo (or a fork) in `/settings/skills-source`. See
+[docs/skills_repo_setup.md](https://github.com/hulinl/personal-hub/blob/main/docs/skills_repo_setup.md)
+in the personal-hub repo.
+
+## Fork
+
+Want your own methodology? Fork this repo, then point your tenant's
+`skills_repo_url` at your fork in `/settings/skills-source`. Changes you make
+land in your fork; your Personal Hub's nightly cron pushes learned adjustments
+there — not into `hulinl/personal-hub-skills`.
+
+```bash
+gh repo fork hulinl/personal-hub-skills --clone=false
 ```
-
-## Fork guide
-
-1. Fork this repo on GitHub.
-2. Edit or add YAMLs under `personal_hub_skills/skills/`.
-3. In your Personal Hub instance, go to `/nastaveni/skills-source` and set the
-   tenant's fork URL.
-4. Personal Hub will pull from your fork on the next sync.
-
-## File structure
-
-- `personal_hub_skills/skills/` — packaged YAML skill definitions; these are
-  installed with the Python package and loaded by `loader_v2.py`.
-- `methodologies/` — Markdown knowledge docs (context injected into prompts).
-- `style_patterns/` — per-recipient writing style examples.
-- `prompts/` — shared system prompts designed for cache-friendly reuse.
 
 ## Validation
 
-Pull requests run `.github/workflows/validate.yml`, which performs a YAML
-syntax check on all skill files. A full schema check is added in a follow-up.
+Every PR runs `.github/workflows/validate.yml`:
+
+- `yamllint` on `personal_hub_skills/skills/`
+- `scripts/validate_schema.py` — schema check (`name`, `version`, `category`,
+  `description_markdown`, `agent_spec_json` with `name`/`model_profile`/
+  `system_prompt_template`)
+- `markdownlint-cli2` on `methodologies/`, `style_patterns/`, `prompts/`
+
+## Nightly bot commits
+
+Personal Hub's `push_skill_changes` cron commits learned adjustments as
+`personal-hub-bot <bot@hulin.me>`. These commits are safe to merge or roll
+back. Human commits by you are also welcome.
+
+## File structure
+
+```
+personal_hub_skills/skills/        # agent YAML definitions
+methodologies/                     # user-authored Markdown knowledge docs
+style_patterns/                    # example style guides per audience
+prompts/                           # shared prompt fragments
+scripts/validate_schema.py         # schema check used by CI
+.github/workflows/validate.yml     # CI
+pyproject.toml                     # pip-installable
+```
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT. See [LICENSE](./LICENSE).
