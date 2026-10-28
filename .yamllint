@@ -1,0 +1,22 @@
+extends: default
+
+rules:
+  # Skill descriptions can be long block-literals.
+  line-length:
+    max: 180
+    level: warning
+  # Allow truthy "yes/no" if ever used — SkillTemplate categories don't need
+  # strict booleans everywhere.
+  truthy:
+    allowed-values: ["true", "false"]
+    check-keys: false
+  # Multi-line strings for prompts.
+  indentation:
+    spaces: 2
+  # Comments optional.
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  # Allow document start marker to be optional.
+  document-start:
+    present: false

@@ -1,6 +1,8 @@
 name: Validate Skills
+
 on:
   pull_request:
+    branches: [main]
   push:
     branches: [main]
 
@@ -9,16 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: YAML syntax check
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
         run: |
-          python3 -c "
-          import glob, sys, yaml
-          failed = False
-          for p in sorted(glob.glob('personal_hub_skills/skills/*.yaml')):
-              try:
-                  with open(p) as f: yaml.safe_load(f)
-                  print(f'OK   {p}')
-              except Exception as e:
-                  print(f'FAIL {p}: {e}'); failed = True
-          sys.exit(1 if failed else 0)
-          "
+          python -m pip install --upgrade pip
+          pip install pyyaml yamllint
+
+      - name: YAML lint
+        run: yamllint personal_hub_skills/skills/
+
+      - name: Schema check
+        run: python scripts/validate_schema.py personal_hub_skills/skills/
+
+      - name: Markdown lint (methodologies, style_patterns)
+        uses: DavidAnson/markdownlint-cli2-action@v18
+        with:
+          globs: |
+            methodologies/**/*.md
+            style_patterns/**/*.md
+            prompts/**/*.md
