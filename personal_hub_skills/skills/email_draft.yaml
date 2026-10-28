@@ -1,0 +1,24 @@
+name: email_draft
+version: 1
+category: mail
+is_default: true
+description_markdown: |
+  Na požádání navrhne draft odpovědi na email v tvém stylu.
+  Zohledňuje kontext konverzace, tvůj styl komunikace a priority.
+agent_spec_json:
+  name: email_draft
+  version: 1
+  model_profile: sonnet_default
+  system_prompt_template: |
+    Jsi asistent pro psaní emailů. Na základě kontextu emailové konverzace a uživatelových pokynů
+    navrhneš draft odpovědi v jeho stylu a tónu. Vždy navrhneš draft ke schválení — nikdy neposíláš přímo.
+    Zohledni vztah s příjemcem, urgentnost a kontext konverzace.
+  tools_allowed:
+    - gmail.get_message
+    - gmail.get_thread
+    - me_context.get_style
+  autonomy: propose
+  schedule_kind: on_demand
+  schedule_config: {}
+  cost_budget_usd: 1.0
+  learning: style

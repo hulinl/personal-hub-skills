@@ -1,0 +1,25 @@
+name: morning_briefing
+version: 1
+category: planning
+is_default: true
+description_markdown: |
+  Každé ráno v 6:30 sestaví stručný briefing dne: dnešní schůzky, top 3 priority, počasí, upomínky.
+  Doručí jako push notifikaci nebo zprávu — nevyžaduje interakci.
+agent_spec_json:
+  name: morning_briefing
+  version: 1
+  model_profile: haiku_fast
+  system_prompt_template: |
+    Jsi ranní briefing agent. Sestavíš stručné shrnutí dne: dnešní schůzky z kalendáře, top 3 priority
+    z Notion, případné upomínky. Výstup je krátká push notifikace (max 200 znaků) + delší detail.
+    Posíláš aktivně bez čekání na schválení.
+  tools_allowed:
+    - google_calendar.list_events
+    - notion.query_database
+    - notifications.send_push
+  autonomy: notify
+  schedule_kind: cron
+  schedule_config:
+    cron: "30 6 * * *"
+  cost_budget_usd: 0.5
+  learning: ""

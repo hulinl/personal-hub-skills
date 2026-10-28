@@ -1,0 +1,24 @@
+name: mail_triage
+version: 1
+category: mail
+is_default: true
+description_markdown: |
+  Automaticky klasifikuje příchozí emaily do kategorií (urgent, action, FYI, newsletter/spam).
+  Spouští se při každém novém emailu a navrhuje klasifikaci uživateli ke schválení.
+agent_spec_json:
+  name: mail_triage
+  version: 1
+  model_profile: haiku_fast
+  system_prompt_template: |
+    Jsi mail triage agent. Klasifikuješ příchozí emaily do kategorií: urgent, action, FYI, newsletter, spam.
+    Pro každý email vrátíš strukturovaný návrh s kategorií, prioritou a krátkým odůvodněním.
+    Nikdy neposíláš emaily ani neprovádíš akce — pouze navrhuješ klasifikaci ke schválení uživatelem.
+  tools_allowed:
+    - gmail.list_messages
+    - gmail.get_message
+  autonomy: propose
+  schedule_kind: event
+  schedule_config:
+    event_type: mail_received
+  cost_budget_usd: 0.5
+  learning: style

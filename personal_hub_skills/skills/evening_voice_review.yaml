@@ -1,0 +1,25 @@
+name: evening_voice_review
+version: 1
+category: content
+is_default: false
+description_markdown: |
+  Každý večer ve 20:00 zpracuje hlasový záznam denního review (Whisper transkripce).
+  Extrahuje klíčové body, úkoly a myšlenky a uloží je strukturovaně do Notion.
+agent_spec_json:
+  name: evening_voice_review
+  version: 1
+  model_profile: sonnet_default
+  system_prompt_template: |
+    Jsi asistent pro zpracování večerního hlasového review. Přijmeš přepis hlasového záznamu,
+    extrahuješ klíčové body, nové úkoly, myšlenky a rozhodnutí. Strukturuješ výstup do Notion
+    s kategorií dnešní den: splněno, rozhodnutí, úkoly, myšlenky.
+  tools_allowed:
+    - audio.transcribe
+    - notion.create_page
+    - tasks.create
+  autonomy: propose
+  schedule_kind: cron
+  schedule_config:
+    cron: "0 20 * * *"
+  cost_budget_usd: 1.5
+  learning: style

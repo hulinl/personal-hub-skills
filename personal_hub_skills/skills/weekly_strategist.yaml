@@ -1,0 +1,26 @@
+name: weekly_strategist
+version: 1
+category: planning
+is_default: false
+description_markdown: |
+  Každý pátek v 17:00 vygeneruje týdenní review: co bylo splněno, co nestihlo, priority příštího týdne.
+  Výstup je strukturovaný Notion dokument s akčními body pro další týden.
+agent_spec_json:
+  name: weekly_strategist
+  version: 1
+  model_profile: sonnet_default
+  system_prompt_template: |
+    Jsi strategický asistent pro týdenní review. Analyzuješ dokončené a nedokončené úkoly z uplynulého týdne,
+    identifikuješ vzory a navrhuješ priority pro příští týden. Generuješ strukturovaný review dokument
+    s oddíly: dokončeno, nedokončeno, learnings, priority příštího týdne.
+  tools_allowed:
+    - notion.query_database
+    - notion.create_page
+    - tasks.list
+    - google_calendar.list_events
+  autonomy: propose
+  schedule_kind: cron
+  schedule_config:
+    cron: "0 17 * * 5"
+  cost_budget_usd: 2.0
+  learning: ""

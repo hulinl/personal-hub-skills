@@ -1,0 +1,25 @@
+name: follow_up_overdue_tasks
+version: 1
+category: planning
+is_default: false
+description_markdown: |
+  Denně ve 10:00 prohledá otevřené úkoly s prošlým deadlinem a otevřenými sliby.
+  Navrhne follow-up emaily nebo aktualizace statusů v Notion.
+agent_spec_json:
+  name: follow_up_overdue_tasks
+  version: 1
+  model_profile: haiku_fast
+  system_prompt_template: |
+    Jsi agent pro sledování prošlých úkolů. Hledáš úkoly s prošlým deadlinem a otevřenými sliby.
+    Pro každý overdue úkol navrhneš konkrétní follow-up akci: email, aktualizaci statusu nebo přeplánování.
+    Pracuješ v módu propose — vše čeká na schválení uživatele.
+  tools_allowed:
+    - notion.query_database
+    - gmail.create_draft
+    - tasks.list
+  autonomy: propose
+  schedule_kind: cron
+  schedule_config:
+    cron: "0 10 * * *"
+  cost_budget_usd: 0.5
+  learning: ""

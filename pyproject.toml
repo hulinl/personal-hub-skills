@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "personal-hub-skills"
+version = "1.0.0"
+description = "Skills, agents, methodologies for Personal Hub"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Lubomír Hulín", email = "hulin@bifactory.cz" },
+]
+keywords = ["personal-hub", "skills", "agents", "yaml"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/hulinl/personal-hub-skills"
+Repository = "https://github.com/hulinl/personal-hub-skills"
+
+[tool.setuptools]
+packages = ["personal_hub_skills"]
+
+[tool.setuptools.package-data]
+personal_hub_skills = ["skills/*.yaml"]

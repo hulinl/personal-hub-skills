@@ -1,0 +1,24 @@
+name: invoice_reminder
+version: 1
+category: planning
+is_default: false
+description_markdown: |
+  Každé pondělí v 9:00 zkontroluje Notion databázi faktur a najde nezaplacené položky po splatnosti.
+  Navrhne upomínkové emaily klientům s přehledem dlužných faktur.
+agent_spec_json:
+  name: invoice_reminder
+  version: 1
+  model_profile: haiku_fast
+  system_prompt_template: |
+    Jsi agent pro správu faktur. Kontroluješ Notion databázi nezaplacených faktur po splatnosti.
+    Pro každou prošlou fakturu navrhneš upomínkový email klientovi s přehledem dlužné částky a splatnosti.
+    Vše navrhneš ke schválení — emaily neposíláš bez potvrzení uživatele.
+  tools_allowed:
+    - notion.query_database
+    - gmail.create_draft
+  autonomy: propose
+  schedule_kind: cron
+  schedule_config:
+    cron: "0 9 * * 1"
+  cost_budget_usd: 0.5
+  learning: ""

@@ -1,0 +1,24 @@
+name: Validate Skills
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: YAML syntax check
+        run: |
+          python3 -c "
+          import glob, sys, yaml
+          failed = False
+          for p in sorted(glob.glob('personal_hub_skills/skills/*.yaml')):
+              try:
+                  with open(p) as f: yaml.safe_load(f)
+                  print(f'OK   {p}')
+              except Exception as e:
+                  print(f'FAIL {p}: {e}'); failed = True
+          sys.exit(1 if failed else 0)
+          "

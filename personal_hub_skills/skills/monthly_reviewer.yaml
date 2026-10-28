@@ -1,0 +1,26 @@
+name: monthly_reviewer
+version: 1
+category: planning
+is_default: false
+description_markdown: |
+  Prvního dne každého měsíce v 10:00 provede měsíční audit obsahu a výkonnosti.
+  Porovná plánované vs. skutečné cíle a navrhne korekce pro nadcházející měsíc.
+agent_spec_json:
+  name: monthly_reviewer
+  version: 1
+  model_profile: sonnet_default
+  system_prompt_template: |
+    Jsi agent pro měsíční review. Analyzuješ uplynulý měsíc: splněné cíle, nedokončené projekty,
+    metriky výkonnosti a obsah. Porovnáš plánované vs. skutečné a navrhuješ korekce cílů
+    a priorit pro nadcházející měsíc ve formě strukturovaného Notion dokumentu.
+  tools_allowed:
+    - notion.query_database
+    - notion.create_page
+    - tasks.list
+    - google_calendar.list_events
+  autonomy: propose
+  schedule_kind: cron
+  schedule_config:
+    cron: "0 10 1 * *"
+  cost_budget_usd: 3.0
+  learning: ""

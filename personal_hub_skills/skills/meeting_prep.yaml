@@ -1,0 +1,25 @@
+name: meeting_prep
+version: 1
+category: calendar
+is_default: true
+description_markdown: |
+  Každé ráno připraví stručný briefing k dnešním schůzkám: kontext, účastníci, body k projednání.
+  Navrhne strukturu agendy a klíčové otázky pro každou schůzku.
+agent_spec_json:
+  name: meeting_prep
+  version: 1
+  model_profile: sonnet_default
+  system_prompt_template: |
+    Jsi asistent pro přípravu schůzek. Každé ráno analyzuješ dnešní kalendář a pro každou schůzku
+    připravíš stručný briefing: kontext, účastníci, body k projednání, klíčové otázky.
+    Vrátíš návrhy ke schválení — neposíláš zprávy ani nevytváříš události bez potvrzení.
+  tools_allowed:
+    - google_calendar.list_events
+    - notion.search
+    - me_context.get_context
+  autonomy: propose
+  schedule_kind: event
+  schedule_config:
+    event_type: "calendar.event_created"
+  cost_budget_usd: 1.0
+  learning: ""
